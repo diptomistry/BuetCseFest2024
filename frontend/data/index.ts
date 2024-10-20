@@ -234,14 +234,14 @@ export const aiFeatures = [
 export const socialMedia = [
   {
     id: 1,
-    img: "/git.svg",
+    img: "/link.svg",
   },
   {
     id: 2,
-    img: "/git.svg",
+    img: "/link.svg",
   },
   {
     id: 3,
-    img: "/git.svg",
+    img: "/link.svg",
   },
 ];

@@ -96,8 +96,15 @@ const Auth = () => {
               </div>
             </div>
             
-            <div className="mt-5">
-              <AuthButton buttonText={isSignup ? 'Sign up' : 'Login'} />
+            <div className="mt-5"  onClick={() => {
+                if (!isSignup) {
+                window.location.href = '/dashboard';
+                }
+              }}>
+              <AuthButton 
+              buttonText={isSignup ? 'Sign up' : 'Login'} 
+             
+              />
             </div>
 
             <div className="flex items-center justify-between mt-4">

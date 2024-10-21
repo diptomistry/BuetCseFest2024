@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Header from "@/components/Header";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 
@@ -19,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/d.png" sizes="any" />
+        <link rel="icon" href="/logo.png" sizes="any" />
       </head>
       <body className={inter.className}>
         <ThemeProvider

@@ -61,7 +61,7 @@ const Hero = () => {
             songs from images
           </p>
 
-          <a href="#home">
+          <a href="/auth">
             <MagicButton
               title="Start the Experience"
               icon={<FaLocationArrow />}

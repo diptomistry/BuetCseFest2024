@@ -48,7 +48,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className={cn(
-        " flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1  border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        " flex flex-col md:flex-row  dark:bg-neutral-800 w-full flex-1  border border-neutral-200 dark:border-neutral-700 overflow-hidden",
         "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
       )}
     >
@@ -81,7 +81,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex flex-1 p-6  dark:bg-neutral-900 rounded-tl-2xl border  dark:border-neutral-700">
+      <div className="flex flex-1   dark:bg-neutral-900 rounded-tl-2xl  border  dark:border-neutral-700">
         {children}  
       </div>
     </div>

@@ -61,7 +61,7 @@ const Auth = () => {
               </div>
             </div>
 
-            {/* Conditionally render Remember Me and Forgot Password for Login mode */}
+            
             {!isSignup && (
               <div className="flex justify-around">
                 <div>

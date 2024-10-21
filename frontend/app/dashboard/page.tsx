@@ -1,10 +1,11 @@
-import { SidebarDemo } from '@/components/dashboard/SidebarDemo'
-import React from 'react'
-
-const page = () => {
-  return (
-    <div><SidebarDemo/></div>
-  )
-}
-
-export default page
+const DashboardPage = () => {
+    return (
+      <div>
+        <h1 className="text-xl font-bold">Main Dashboard</h1>
+        {/* Add more content here */}
+      </div>
+    );
+  };
+  
+  export default DashboardPage;
+  

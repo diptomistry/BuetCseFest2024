@@ -4,6 +4,7 @@ import AuthTitle from '../ui/AuthTitle';
 import GoogleIcon from '../ui/GoogleIcon';
 import AuthButton from './AuthButton';
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { signIn } from 'next-auth/react';
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
@@ -86,26 +87,30 @@ const Auth = () => {
               </div>
             )}
 
-            <div className="flex justify-center w-full items-center mt-5">
+<div className="flex justify-center w-full items-center mt-5">
               <div>
-                <button
-                  className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                >
-                  <GoogleIcon text={isSignup ? 'Sign up with Google' : 'Sign in with Google'} />
-                </button>
+              <button
+  className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+  onClick={() => signIn("google", { callbackUrl: "/dashboard" })} // Redirect to dashboard after successful sign-in
+>
+  <GoogleIcon text={isSignup ? "Sign up with Google" : "Sign in with Google"} />
+</button>
+
               </div>
             </div>
-            
-            <div className="mt-5"  onClick={() => {
+
+            <div
+              className="mt-5"
+              onClick={() => {
                 if (!isSignup) {
-                window.location.href = '/dashboard';
+                  window.location.href = "/dashboard";
                 }
-              }}>
-              <AuthButton 
-              buttonText={isSignup ? 'Sign up' : 'Login'} 
-             
-              />
+              }}
+            >
+              <AuthButton buttonText={isSignup ? "Sign up" : "Login"} />
             </div>
+            
+            
 
             <div className="flex items-center justify-between mt-4">
               <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>

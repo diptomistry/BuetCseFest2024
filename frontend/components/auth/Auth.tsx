@@ -1,12 +1,15 @@
 "use client";
-import React, { useState } from 'react';
-import AuthTitle from '../ui/AuthTitle';
-import GoogleIcon from '../ui/GoogleIcon';
-import AuthButton from './AuthButton';
+import React, { useState } from "react";
+import AuthTitle from "../ui/AuthTitle";
+import GoogleIcon from "../ui/GoogleIcon";
+import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { signIn } from 'next-auth/react';
+import { signIn, signOut, useSession } from "next-auth/react";
+
 
 const Auth = () => {
+  const { data: session } = useSession()
+  console.log('here',session)
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [isSignup, setIsSignup] = useState(false); // State to toggle between login and signup modes
 
@@ -17,13 +20,16 @@ const Auth = () => {
   const toggleMode = () => {
     setIsSignup(!isSignup); // Toggle between sign up and login
   };
+  if(session) {
+   window.location.href = "/dashboard";
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
           <div className="max-w-md mx-auto">
-            <AuthTitle text1={isSignup ? 'Signup' : 'Login'} text2={'Now'} />
+            <AuthTitle text1={isSignup ? "Signup" : "Login"} text2={"Now"} />
             <div className="mt-5">
               <label
                 className="font-semibold text-sm text-gray-600 pb-1 block"
@@ -45,7 +51,7 @@ const Auth = () => {
               <div className="relative">
                 <input
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   id="password"
                 />
                 <button
@@ -62,7 +68,6 @@ const Auth = () => {
               </div>
             </div>
 
-            
             {!isSignup && (
               <div className="flex justify-around">
                 <div>
@@ -87,15 +92,18 @@ const Auth = () => {
               </div>
             )}
 
-<div className="flex justify-center w-full items-center mt-5">
+            <div className="flex justify-center w-full items-center mt-5">
               <div>
-              <button
-  className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-  onClick={() => signIn("google", { callbackUrl: "/dashboard" })} // Redirect to dashboard after successful sign-in
->
-  <GoogleIcon text={isSignup ? "Sign up with Google" : "Sign in with Google"} />
-</button>
-
+                <button
+                  className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                  onClick={() => signIn("google")}
+                >
+                  <GoogleIcon
+                    text={
+                      isSignup ? "Sign up with Google" : "Sign in with Google"
+                    }
+                  />
+                </button>
               </div>
             </div>
 
@@ -109,8 +117,6 @@ const Auth = () => {
             >
               <AuthButton buttonText={isSignup ? "Sign up" : "Login"} />
             </div>
-            
-            
 
             <div className="flex items-center justify-between mt-4">
               <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -119,7 +125,7 @@ const Auth = () => {
                 href="#"
                 onClick={toggleMode} // Toggle between modes when clicked
               >
-                {isSignup ? 'Or Login' : 'Or Sign up'}
+                {isSignup ? "Or Login" : "Or Sign up"}
               </a>
               <span className="w-1/5 border-b dark:border-gray-400 md:w-1/4"></span>
             </div>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
-import Providers from "@/components/Provider";  // Import your Providers component
-
+import { SessionProvider } from "next-auth/react";
+import SessionWrapper from "@/components/SessionWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,8 +23,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         {/* Wrap everything inside Providers to have session handling across the app */}
-        <Providers>
-          <ThemeProvider
+
+
+   <SessionWrapper>
+   <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
@@ -32,7 +34,9 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
-        </Providers>
+   </SessionWrapper>
+
+
       </body>
     </html>
   );

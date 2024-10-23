@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import { signOut,useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import {
   IconArrowLeft,

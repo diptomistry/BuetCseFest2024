@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
-import { SessionProvider } from "next-auth/react";
+import UserProvider from "@/components/UserProvider";
 import SessionWrapper from "@/components/SessionWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,8 +24,22 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* Wrap everything inside Providers to have session handling across the app */}
 
-
-   <SessionWrapper>
+        <UserProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </UserProvider>
+      </body>
+    </html>
+  );
+}
+/*
+ <SessionWrapper>
    <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -35,9 +49,4 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
    </SessionWrapper>
-
-
-      </body>
-    </html>
-  );
-}
+*/

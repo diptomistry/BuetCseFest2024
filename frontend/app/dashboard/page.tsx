@@ -1,8 +1,11 @@
 "use client";
-import { signIn, signOut, useSession } from "next-auth/react";
+import React,{useContext} from "react";
+import { signOut} from "next-auth/react";
+import { UserContext } from "@/components/UserProvider";
 const DashboardPage = () => {
-    const { data: session } = useSession()
-  console.log('here',session)
+  const { user } = useContext(UserContext) ?? {};
+  console.log('user',user);
+    
     return (
       <div>
         <h1 className="text-xl font-bold">Main Dashboard</h1>

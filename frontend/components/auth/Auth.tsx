@@ -1,18 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AuthTitle from "../ui/AuthTitle";
 import GoogleIcon from "../ui/GoogleIcon";
 import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { signIn, signOut, useSession } from "next-auth/react";
-
+import { UserContext } from "../UserProvider";
 
 const Auth = () => {
-  const { data: session } = useSession()
-  console.log('here',session)
+  // const { data: session } = useSession()
+  // console.log('here',session)
+  const [rememberMe, setRememberMe] = useState(false); // State to store remember me checkbox
+  const [email, setEmail] = useState(""); // State to store email input
+  const [password, setPassword] = useState(""); // State to store
+  const { login } = useContext(UserContext) ?? {}; // Add fallback to avoid undefined errors
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [isSignup, setIsSignup] = useState(false); // State to toggle between login and signup modes
-
+  const [error, setError] = useState(""); // State to store error messages
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -20,9 +24,45 @@ const Auth = () => {
   const toggleMode = () => {
     setIsSignup(!isSignup); // Toggle between sign up and login
   };
-  if(session) {
-   window.location.href = "/dashboard";
-  }
+  // if(session) {
+  //  window.location.href = "/dashboard";
+  // }
+  const handleLogin = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setError(""); // Clear previous errors
+
+    try {
+      
+      const response = await fetch('http://localhost:8000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+     // console.log(data);
+
+      if (response.ok && data.success) {
+        login?.(data.data); 
+        localStorage.setItem('token', data.data.token);
+
+        if (rememberMe) {
+          localStorage.setItem('email', email);
+          localStorage.setItem('password', password);
+        } else {
+          localStorage.removeItem('email');
+          localStorage.removeItem('password');
+        }
+        window.location.href = "/dashboard"; // Redirect to dashboard after successful login
+      } else {
+        setError(data.message || 'Login failed. Please check your credentials.'); // Show specific error message
+      }
+    } catch (error) {
+      setError('An error occurred during login. Please try again.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -35,12 +75,16 @@ const Auth = () => {
                 className="font-semibold text-sm text-gray-600 pb-1 block"
                 htmlFor="email"
               >
-                E-mail
+                Email
               </label>
               <input
                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                 type="email"
                 id="email"
+                value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+                
               />
               <label
                 className="font-semibold text-sm text-gray-600 pb-1 block"
@@ -53,6 +97,9 @@ const Auth = () => {
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                   type={showPassword ? "text" : "password"}
                   id="password"
+                  value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
                 />
                 <button
                   type="button"
@@ -76,6 +123,8 @@ const Auth = () => {
                     name="remember"
                     id="remember"
                     className="mr-2"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <label htmlFor="remember" className="text-sm text-gray-600">
                     Remember me
@@ -109,13 +158,14 @@ const Auth = () => {
 
             <div
               className="mt-5"
-              onClick={() => {
-                if (!isSignup) {
-                  window.location.href = "/dashboard";
-                }
-              }}
             >
-              <AuthButton buttonText={isSignup ? "Sign up" : "Login"} />
+              {isSignup ? (
+                <AuthButton buttonText={"Sign up"}  />
+              ) : (
+                <div onClick={handleLogin}>
+                  <AuthButton buttonText={"Login"} />
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-between mt-4">

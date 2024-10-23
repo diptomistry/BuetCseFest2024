@@ -9,7 +9,7 @@ const AuthButton = ({
     <div className="w-full">
       <div className="flex items-center justify-center">
         <div className="relative group w-full">
-          <button
+          <div
             className="relative inline-block w-full p-px font-semibold leading-6 text-white bg-gray-800 shadow-2xl cursor-pointer rounded-xl shadow-zinc-900 transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95"
           >
             <span
@@ -36,7 +36,7 @@ const AuthButton = ({
                 </svg>
               </div>
             </span>
-          </button>
+          </div>
         </div>
       </div>
     </div>

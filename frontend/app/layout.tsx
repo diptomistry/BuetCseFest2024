@@ -25,7 +25,8 @@ export default function RootLayout({
         {/* Wrap everything inside Providers to have session handling across the app */}
 
         <UserProvider>
-          <ThemeProvider
+        <SessionWrapper>
+        <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
@@ -33,6 +34,7 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
+        </SessionWrapper>
         </UserProvider>
       </body>
     </html>

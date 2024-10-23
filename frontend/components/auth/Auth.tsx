@@ -1,16 +1,18 @@
 "use client";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import AuthTitle from "../ui/AuthTitle";
 import GoogleIcon from "../ui/GoogleIcon";
 import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserContext } from "../UserProvider";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
 const Auth = () => {
-  // const { data: session } = useSession()
-  // console.log('here',session)
+ const { data: session } = useSession()
+ 
   const [rememberMe, setRememberMe] = useState(false); // State to store remember me checkbox
   const [email, setEmail] = useState(""); // State to store email input
   const [password, setPassword] = useState(""); // State to store
@@ -26,13 +28,57 @@ const Auth = () => {
   const toggleMode = () => {
     setIsSignup(!isSignup); // Toggle between sign up and login
   };
-  // if(session) {
-  //  window.location.href = "/dashboard";
-  // }
+  useEffect(() => {
+    if (session && session.user) {
+      const googleEmail = session.user.email;
+      console.log(googleEmail,isSignup);
+      if (googleEmail) {
+        if (isSignup) {
+          handleGoogleSignup(googleEmail); // Handle Google Signup
+        } else {
+          handleGoogleLogin(googleEmail); // Handle Google Login
+        }
+      }
+    }
+  }, [session,isSignup]);
+  const handleGoogleLogin = async (googleEmail: string) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: googleEmail, password: '' }), // Send email and empty password
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        login?.(data.data); 
+        localStorage.setItem('token', data.data.token);
+
+        if (rememberMe) {
+          localStorage.setItem('email', googleEmail);
+        } else {
+          localStorage.removeItem('email');
+        }
+
+        window.location.href = "/dashboard"; // Redirect to dashboard after successful login
+      } else {
+        setError(data.message || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      setError('An error occurred during login. Please try again.');
+    }
+  };
+
   const handleSignUp = () => {
     // Navigate to email verification page and pass email and password as query parameters
     router.push(`/auth/emailVerify?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
   };
+  const handleGoogleSignup = (googleEmail: string) => {
+    router.push(`/auth/verifiedEmail?email=${encodeURIComponent(googleEmail)}`);
+  }
 
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();

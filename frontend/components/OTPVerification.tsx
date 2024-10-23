@@ -102,9 +102,12 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
             },
           }
         );
-
+      if(response.data.success){
+        alert("User created successfully");
+        window.location.href = "/dashboard";
+      }
         // Handle response
-        console.log("Response:", response.data);
+        //console.log("Response:", response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(

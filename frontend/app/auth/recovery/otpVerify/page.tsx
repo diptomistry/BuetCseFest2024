@@ -1,45 +1,111 @@
 "use client";
-import AuthButton from "@/components/auth/AuthButton";
 import AuthTitle from "@/components/ui/AuthTitle";
 import React, { useEffect, useState } from "react";
-interface EmailVerificationPageProps {
-    email: string;
-   
-}
+import CustomModal from "@/components/CustomModal"; // Make sure the path is correct
+import AuthButton from "@/components/auth/AuthButton";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";  
 
-const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({ email }) => {
+
+
+const EmailVerificationPage = () => {
+    const searchParams = useSearchParams();
+    const email = searchParams.get("email") || "";
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
-  const [otpSent, setOtpSent] = useState(false);
-  
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const RecoveryOtp = sessionStorage.getItem("RecoveryOtp");
+  console.log(RecoveryOtp);
+  const [loading, setLoading] = useState(false);
+
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtp(e.target.value);
   };
 
   const handleVerifyOtp = (e: React.FormEvent) => {
+    console.log("OTP matched",otp,RecoveryOtp);
     e.preventDefault();
-    // Add your logic to verify the OTP
-    console.log("OTP submitted for verification:", otp);
+    if (otp === RecoveryOtp) {
+       
+      // Open modal if OTP matches
+      setModalOpen(true);
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
   };
 
   useEffect(() => {
-    let countdown: NodeJS.Timeout;
-    if (otpSent && timer > 0) {
-      countdown = setInterval(() => {
-        setTimer((prev) => prev - 1);
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-    } else if (timer === 0) {
-      setOtpSent(false); // Reset OTP sent status when timer reaches 0
+      return () => clearInterval(interval);
+    } else {
+      console.log("OTP expired");
     }
+  }, [timer]);
 
-    return () => clearInterval(countdown);
-  }, [otpSent, timer]);
+  const sendOtp = async () => {
+    setLoading(true);
+    try {
+        console.log(email);
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/send-otp",
+        {
+          email,
+          debug: false,
+        }
+      );
+console.log(response.data);
+      if (response.data.success) {
+        alert("OTP sent successfully");
+        sessionStorage.setItem("RecoveryOtp", response.data.otp);
+        setTimer(30);
+        //set otp to session storage
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error sending OTP:",
+          error.response?.data || error.message
+        );
+      } else {
+        console.error("Unexpected error:", error);
+      }
+      alert("Failed to send OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    
+    }
+  };
 
-  const handleSendOtp = () => {
-    // Logic to send OTP to email would go here
-    setOtpSent(true);
-    setTimer(30);
-    console.log("OTP sent to email");
+
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleSubmitNewPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword === confirmPassword) {
+      // Add your logic to handle password update
+      console.log("New password set:", newPassword);
+      setModalOpen(false); // Close the modal on success
+    } else {
+      alert("Passwords do not match!");
+    }
   };
 
   return (
@@ -65,25 +131,36 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({ email }) 
               />
             </div>
 
-            <button className="mt-5 w-full" onClick={handleVerifyOtp}>
-              <AuthButton buttonText="Verify OTP" />
-            </button>
-
-            {otpSent && (
-              <div className="mt-4 text-center">
-                <p className="text-sm text-gray-500">
-                  {timer > 0 ? `Resend OTP in ${timer}s` : "OTP expired."}
-                </p>
-                {timer === 0 && (
-                  <button
-                    className="text-xs text-blue-500 underline"
-                    onClick={handleSendOtp}
-                  >
-                    Resend OTP
-                  </button>
-                )}
+            {timer > 0 ? (
+              <button
+                className="mt-5 w-full"
+                onClick={handleVerifyOtp}
+               
+              >
+                <AuthButton buttonText="Verify OTP" />
+              </button>
+            ) : (
+              <div className="mt-5 w-full  ">
+                <span className="text-gray-500 bg-gray-300 py-2 px-4 rounded">
+                  Verify OTP
+                </span>
               </div>
             )}
+
+            <div className="mt-4 text-center flex mr-2">
+              <p className="text-sm text-gray-500">
+                {timer > 0 ? `OTP will expire in ${timer}s` : "OTP expired."}
+              </p>
+              {timer === 0 && (
+                <button
+                  className="text-xs text-blue-500 underline"
+                  onClick={sendOtp}
+                  disabled={loading}
+                >
+                  {loading ? "Sending OTP..." : "Resend OTP"}
+                </button>
+              )}
+            </div>
 
             <div className="flex items-center justify-between mt-4">
               <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -98,6 +175,55 @@ const EmailVerificationPage: React.FC<EmailVerificationPageProps> = ({ email }) 
           </div>
         </div>
       </div>
+
+      <CustomModal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        ChildrenStyle="p-4"
+      >
+        <h2 className="text-lg font-semibold mb-4">Set New Password</h2>
+        <form onSubmit={handleSubmitNewPassword}>
+          <div className="mb-4">
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-1"
+              htmlFor="new-password"
+            >
+              New Password
+            </label>
+            <input
+              className="border rounded-lg px-3 py-2 w-full text-sm"
+              type="password"
+              id="new-password"
+              value={newPassword}
+              onChange={handleNewPasswordChange}
+              placeholder="New Password"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-sm font-semibold text-gray-600 mb-1"
+              htmlFor="confirm-password"
+            >
+              Confirm Password
+            </label>
+            <input
+              className="border rounded-lg px-3 py-2 w-full text-sm"
+              type="password"
+              id="confirm-password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              placeholder="Confirm Password"
+              required
+            />
+          </div>
+          <button type="submit" className="w-full mt-5">
+            <span className="text-white bg-blue-500 py-2 px-4 rounded">
+              Submit New Password
+            </span>
+          </button>
+        </form>
+      </CustomModal>
     </div>
   );
 };

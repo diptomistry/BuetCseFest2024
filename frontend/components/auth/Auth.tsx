@@ -6,6 +6,7 @@ import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserContext } from "../UserProvider";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 const Auth = () => {
   // const { data: session } = useSession()
@@ -17,6 +18,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [isSignup, setIsSignup] = useState(false); // State to toggle between login and signup modes
   const [error, setError] = useState(""); // State to store error messages
+  const router = useRouter(); 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -27,6 +29,11 @@ const Auth = () => {
   // if(session) {
   //  window.location.href = "/dashboard";
   // }
+  const handleSignUp = () => {
+    // Navigate to email verification page and pass email and password as query parameters
+    router.push(`/auth/emailVerify?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+  };
+
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setError(""); // Clear previous errors
@@ -160,7 +167,9 @@ const Auth = () => {
               className="mt-5"
             >
               {isSignup ? (
-                <AuthButton buttonText={"Sign up"}  />
+                <div onClick={handleSignUp}>
+                  <AuthButton buttonText={"Signup"} />
+                </div>
               ) : (
                 <div onClick={handleLogin}>
                   <AuthButton buttonText={"Login"} />

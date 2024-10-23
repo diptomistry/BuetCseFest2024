@@ -1,6 +1,6 @@
 "use client";
 import React,{useContext} from "react";
-import { signOut} from "next-auth/react";
+
 import { UserContext } from "@/components/UserProvider";
 const DashboardPage = () => {
   const { user } = useContext(UserContext) ?? {};

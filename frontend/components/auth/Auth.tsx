@@ -5,10 +5,10 @@ import GoogleIcon from "../ui/GoogleIcon";
 import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { UserContext } from "../UserProvider";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
-import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+
 
 const Auth = () => {
  const { data: session } = useSession()
@@ -67,6 +67,7 @@ const Auth = () => {
         window.location.href = "/dashboard"; // Redirect to dashboard after successful login
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
+        console.log(error);
       }
     } catch (error) {
       setError('An error occurred during login. Please try again.');

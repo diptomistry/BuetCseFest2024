@@ -176,28 +176,44 @@ export const workExperience = [
     title: "Frontend Engineer Intern",
     desc: "Assisted in the development of a web-based platform using React.js, enhancing interactivity.",
     className: "md:col-span-2",
-    thumbnail: "/exp1.svg",
+    thumbnail: {
+      src: "/exp1.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 2,
     title: "Mobile App Dev - JSM Tech",
     desc: "Designed and developed mobile app for both iOS & Android platforms using React Native.",
     className: "md:col-span-2", // change to md:col-span-2
-    thumbnail: "/exp2.svg",
+    thumbnail: {
+      src: "/exp2.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 3,
     title: "Freelance App Dev Project",
     desc: "Led the dev of a mobile app for a client, from initial concept to deployment on app stores.",
     className: "md:col-span-2", // change to md:col-span-2
-    thumbnail: "/exp3.svg",
+    thumbnail: {
+      src: "/exp3.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 4,
     title: "Lead Frontend Developer",
     desc: "Developed and maintained user-facing features using modern frontend technologies.",
     className: "md:col-span-2",
-    thumbnail: "/exp4.svg",
+    thumbnail: {
+      src: "/exp4.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
 ];
 export const aiFeatures = [
@@ -206,28 +222,44 @@ export const aiFeatures = [
     title: "AI Song Creation",
     desc: "Transform text from images into personalized songs using advanced AI models.",
     className: "md:col-span-2",
-    thumbnail: "/exp1.svg",
+    thumbnail: {
+      src: "/exp1.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 2,
     title: "AI Chatbot",
     desc: "Engage users with an intelligent chatbot powered by state-of-the-art AI technology.",
     className: "md:col-span-2",
-    thumbnail: "/exp2.svg",
+    thumbnail: {
+      src: "/exp2.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 3,
     title: "Defective Fabric Detection",
     desc: "Automatically detect defects in fabric using machine learning and AI-powered image analysis.",
     className: "md:col-span-2",
-    thumbnail: "/exp3.svg",
+    thumbnail: {
+      src: "/exp3.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
   {
     id: 4,
     title: "AI Image Generator",
     desc: "Generate high-quality images from text prompts with cutting-edge AI models.",
     className: "md:col-span-2",
-    thumbnail: "/exp4.svg",
+    thumbnail: {
+      src: "/exp4.svg",
+      width: 100,  // Set appropriate width
+      height: 100, // Set appropriate height
+    },
   },
 ];
 

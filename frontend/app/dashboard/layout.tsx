@@ -14,16 +14,10 @@ import { cn } from "@/lib/utils";
 import { Logo, LogoIcon } from "@/components/dashboard/SidebarDemo";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  
-  
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" }); // Redirect to the root route after sign out
+  };
 
-    const handleLogout = () => {
-      signOut({ callbackUrl: "/" }); // Redirect to the root route after sign out
-    };
-    
-    
-      
- 
   const links = [
     {
       label: "Chatbot",

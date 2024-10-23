@@ -1,10 +1,13 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import AuthTitle from "@/components/ui/AuthTitle";
 import AuthButton from "@/components/auth/AuthButton";
-const Page = () => {
+
+// The main form content that uses search params
+const FormContent = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
   const name = email.split("@")[0]; // Example: "john.doe@example.com" => "john.doe"
@@ -48,8 +51,7 @@ const Page = () => {
       if (response.data.success) {
         alert("User created successfully");
         window.location.href = "/dashboard";
-      }
-      else{
+      } else {
         alert("User creation failed: " + response.data.message);
       }
     } catch (error) {
@@ -134,13 +136,18 @@ const Page = () => {
             >
               <AuthButton buttonText="Create Account" />
             </button>
-           
-            
           </div>
         </form>
       </div>
     </div>
   );
 };
+
+// Main Page component wrapped with Suspense
+const Page = () => (
+  <Suspense fallback={<div>Loading form...</div>}>
+    <FormContent />
+  </Suspense>
+);
 
 export default Page;

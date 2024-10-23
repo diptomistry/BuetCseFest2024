@@ -4,7 +4,6 @@ import AuthTitle from "../ui/AuthTitle";
 import GoogleIcon from "../ui/GoogleIcon";
 import AuthButton from "./AuthButton";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-
 import { signIn, useSession } from "next-auth/react";
 import { UserContext } from "../UserProvider";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation

@@ -17,9 +17,12 @@ const customStyles: {
     zIndex: number;
     padding: string;
     position: 'absolute' | 'fixed' | 'relative' | 'sticky' | 'static' | undefined; // Updated position type
+    backgroundColor: string; // Background color property
+    color: string; // Text color property
   };
   overlay: {
     zIndex: number;
+    backgroundColor: string; // Overlay background color
   };
 } = {
   content: {
@@ -34,10 +37,13 @@ const customStyles: {
     maxHeight: '90vh',
     zIndex: 1000,
     padding: '20px',
-    position: 'relative', // Ensure this is a valid value
+    position: 'relative',
+    backgroundColor: '#ffffff', // Dark background color
+    color: '#000319', // Light text color for contrast
   },
   overlay: {
     zIndex: 1000,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)', // Dark overlay background
   },
 };
 
@@ -64,7 +70,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
     >
       <button
         onClick={onRequestClose}
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 transition duration-300 z-50"
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-300 transition duration-300 z-50"
       >
         <FaTimes className="text-2xl" />
       </button>

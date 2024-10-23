@@ -21,6 +21,7 @@ const Auth = () => {
   const [isSignup, setIsSignup] = useState(false); // State to toggle between login and signup modes
   const [error, setError] = useState(""); // State to store error messages
   const router = useRouter(); 
+  const [loginFlag, setLoginFlag] = useState(true);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -33,7 +34,7 @@ const Auth = () => {
       const googleEmail = session.user.email;
       console.log(googleEmail,isSignup);
       if (googleEmail) {
-        if (isSignup) {
+        if (isSignup && !loginFlag) {
           handleGoogleSignup(googleEmail); // Handle Google Signup
         } else {
           handleGoogleLogin(googleEmail); // Handle Google Login
@@ -116,6 +117,14 @@ const Auth = () => {
       setError('An error occurred during login. Please try again.');
     }
   };
+  const handleGoogleButtonClickSignin = () => {
+    setLoginFlag(true);
+    signIn("google");
+  };
+  const handleGoogleButtonClickSignup = () => {
+    setLoginFlag(false);
+    signIn("google");
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -194,20 +203,39 @@ const Auth = () => {
               </div>
             )}
 
-            <div className="flex justify-center w-full items-center mt-5">
+            {isSignup && (
+              <div className="flex justify-center w-full items-center mt-5">
               <div>
                 <button
                   className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                  onClick={() => signIn("google")}
+                  onClick={handleGoogleButtonClickSignup}
                 >
                   <GoogleIcon
                     text={
-                      isSignup ? "Sign up with Google" : "Sign in with Google"
+                      "Sign up with Google"
                     }
                   />
                 </button>
               </div>
             </div>
+            )}
+            {!isSignup && (
+              <div className="flex justify-center w-full items-center mt-5">
+              <div>
+                <button
+                  className="flex items-center justify-center py-2 sm:px-20 px-10 bg-white hover:bg-gray-200 focus:ring-purple focus:ring-offset-gray-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                  onClick={handleGoogleButtonClickSignin}
+                >
+                  <GoogleIcon
+                    text={
+                       "Sign in with Google"
+                    }
+                  />
+                </button>
+              </div>
+            </div>
+            )}
+
 
             <div
               className="mt-5"

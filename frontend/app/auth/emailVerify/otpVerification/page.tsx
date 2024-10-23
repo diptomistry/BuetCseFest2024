@@ -2,7 +2,7 @@
 import React from 'react'
 import OTPVerification from '@/components/OTPVerification'
 import { useSearchParams } from 'next/navigation'
-const page = () => {
+const Page = () => {
     const searchParams = useSearchParams()
     
   return (
@@ -10,4 +10,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

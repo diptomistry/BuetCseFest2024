@@ -3,7 +3,7 @@ import AuthButton from "@/components/auth/AuthButton";
 import AuthTitle from "@/components/ui/AuthTitle";
 import React, { useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,4 +60,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

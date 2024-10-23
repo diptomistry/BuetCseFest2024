@@ -2,6 +2,7 @@
 import AuthButton from "@/components/auth/AuthButton";
 import AuthTitle from "@/components/ui/AuthTitle";
 import React, { useState } from "react";
+import CustomModal from "@/components/CustomModal";
 
 const Page = () => {
   const [email, setEmail] = useState("");

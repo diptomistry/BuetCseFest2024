@@ -52,7 +52,7 @@ const Auth = () => {
       });
 
       const data = await response.json();
-
+    
       if (response.ok && data.success) {
         login?.(data.data); 
         localStorage.setItem('token', data.data.token);
@@ -96,7 +96,7 @@ const Auth = () => {
       });
 
       const data = await response.json();
-     // console.log(data);
+     console.log(data);
 
       if (response.ok && data.success) {
         login?.(data.data); 

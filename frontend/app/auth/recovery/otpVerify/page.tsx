@@ -1,16 +1,18 @@
 "use client";
 import AuthTitle from "@/components/ui/AuthTitle";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import CustomModal from "@/components/CustomModal"; // Make sure the path is correct
 import AuthButton from "@/components/auth/AuthButton";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";  
+import { UserContext } from "@/components/UserProvider";
 
 
 
 const EmailVerificationPage = () => {
-    const searchParams = useSearchParams();
-    const email = searchParams.get("email") || "";
+
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -19,6 +21,13 @@ const EmailVerificationPage = () => {
   const RecoveryOtp = sessionStorage.getItem("RecoveryOtp");
   console.log(RecoveryOtp);
   const [loading, setLoading] = useState(false);
+  const userContext = useContext(UserContext);
+  const user = userContext?.user;
+  if (user && 'userID' in user) {
+    console.log(user.userID);
+  } else {
+    console.log("User or userID is not available");
+  }
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtp(e.target.value);
@@ -97,16 +106,41 @@ console.log(response.data);
     setConfirmPassword(e.target.value);
   };
 
-  const handleSubmitNewPassword = (e: React.FormEvent) => {
+const handleSubmitNewPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword === confirmPassword) {
-      // Add your logic to handle password update
-      console.log("New password set:", newPassword);
-      setModalOpen(false); // Close the modal on success
+        try {
+            console.log('bb', email);
+            const response = await fetch("http://localhost:8000/api/auth/reset-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email, // Pass the email from props
+                    current_pass: newPassword,
+                    confirm_pass: confirmPassword,
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                console.log("New password set:", newPassword);
+                alert("Password reset successfully.");
+                //back to login
+                window.location.href = "/auth";
+                setModalOpen(false); // Close the modal on success
+            } else {
+                alert(data.message || "Failed to reset password.");
+            }
+        } catch (error) {
+            console.error("Error resetting password:", error);
+            alert("An error occurred. Please try again.");
+        }
     } else {
-      alert("Passwords do not match!");
+        alert("Passwords do not match!");
     }
-  };
+};
 
   return (
     <div className="flex items-center justify-center h-screen bg-black-100">
@@ -191,7 +225,7 @@ console.log(response.data);
               New Password
             </label>
             <input
-              className="border rounded-lg px-3 py-2 w-full text-sm"
+              className="border rounded-lg px-3 py-2 w-full text-sm text-white-100"
               type="password"
               id="new-password"
               value={newPassword}
@@ -208,7 +242,7 @@ console.log(response.data);
               Confirm Password
             </label>
             <input
-              className="border rounded-lg px-3 py-2 w-full text-sm"
+              className="border rounded-lg px-3 py-2 w-full text-sm text-white-100"
               type="password"
               id="confirm-password"
               value={confirmPassword}
@@ -218,9 +252,7 @@ console.log(response.data);
             />
           </div>
           <button type="submit" className="w-full mt-5">
-            <span className="text-white bg-blue-500 py-2 px-4 rounded">
-              Submit New Password
-            </span>
+           <AuthButton buttonText="Set New Password" />
           </button>
         </form>
       </CustomModal>

@@ -87,7 +87,7 @@ const Auth = () => {
 
     try {
       
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,11 +96,11 @@ const Auth = () => {
       });
 
       const data = await response.json();
-     console.log(data);
+    // console.log(data.token);
 
-      if (response.ok && data.success) {
-        login?.(data.data); 
-        localStorage.setItem('token', data.data.token);
+      if (response.ok) {
+        login?.(data); 
+        localStorage.setItem('token', data.token);
 
         if (rememberMe) {
           localStorage.setItem('email', email);
@@ -111,7 +111,7 @@ const Auth = () => {
         }
         window.location.href = "/dashboard"; // Redirect to dashboard after successful login
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.'); // Show specific error message
+        setError( 'Login failed. Please check your credentials.'); // Show specific error message
       }
     } catch (error) {
       setError('An error occurred during login. Please try again.');
